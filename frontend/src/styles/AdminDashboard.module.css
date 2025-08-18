@@ -1,0 +1,13 @@
+/* =========================
+   FRONTEND: frontend/src/styles/AdminDashboard.module.css
+   ========================= */
+.wrapper { padding: 24px; background:#f8fafc; min-height:100%; }
+.title { font-size:22px; font-weight:700; color:#0f172a; margin-bottom:16px; }
+.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; }
+
+.card { display:flex; gap:12px; align-items:center; background:#fff; padding:14px; border-radius:12px; box-shadow:0 8px 24px rgba(2,6,23,0.05); transition:transform .18s ease; }
+.card:hover { transform:translateY(-6px); }
+.icon { width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:18px; }
+.text { display:flex; flex-direction:column; }
+.cardTitle { font-size:13px; color:#475569; }
+.cardValue { font-size:20px; font-weight:700; color:#0b1220; margin-top:2px; }

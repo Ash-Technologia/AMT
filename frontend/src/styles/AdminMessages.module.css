@@ -1,0 +1,210 @@
+/* frontend/src/styles/AdminMessages.module.css */
+@import "./Theme.css";
+
+.wrapper {
+  padding: 1.25rem;
+}
+
+.headerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.refreshBtn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 0.55rem 1rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: var(--shadow);
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+.refreshBtn:hover { background: var(--accent-light); transform: translateY(-1px); }
+
+.loading, .noData, .error {
+  padding: 1rem;
+  border-radius: var(--radius);
+  background: var(--bg-alt);
+  color: var(--muted);
+  margin-top: 0.5rem;
+}
+
+.error { color: #dc2626; background: #fee2e2; }
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.card {
+  width: 100%;
+  text-align: left;
+  padding: 1rem;
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--soft);
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.2s ease, border 0.2s ease;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  border-color: var(--accent);
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 9999px;
+  background: var(--bg-alt);
+  color: var(--ink);
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.meta { flex: 1; min-width: 0; }
+.name { font-weight: 700; color: var(--ink); }
+.email { font-size: 0.9rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.preview {
+  margin-top: 0.5rem;
+  color: var(--ink);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.date {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Modal */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(1px);
+  display: grid;
+  place-items: center;
+  z-index: 60;
+}
+
+.modal {
+  width: min(720px, 92vw);
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+  border: 1px solid var(--soft);
+  overflow: hidden;
+  animation: pop 0.15s ease;
+}
+
+@keyframes pop {
+  from { transform: translateY(8px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1.1rem;
+  border-bottom: 1px solid var(--soft);
+  background: var(--bg-alt);
+}
+
+.modalTitle {
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.modalClose {
+  background: transparent;
+  border: 0;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: var(--muted);
+}
+.modalClose:hover { color: var(--ink); }
+
+.modalBody {
+  padding: 1.1rem;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+.label {
+  color: var(--muted);
+  font-weight: 600;
+}
+.value {
+  color: var(--ink);
+  word-break: break-word;
+}
+
+.messageBox {
+  margin-top: 0.75rem;
+  padding: 0.85rem;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid var(--soft);
+  color: var(--ink);
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 0.9rem 1.1rem;
+  border-top: 1px solid var(--soft);
+  background: #fafafa;
+}
+
+.replyBtn, .deleteBtn {
+  padding: 0.55rem 0.9rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+}
+.replyBtn {
+  background: var(--accent);
+  color: #fff;
+}
+.replyBtn:hover { background: var(--accent-light); }
+.deleteBtn {
+  background: #ef4444;
+  color: #fff;
+}
+.deleteBtn:hover { filter: brightness(0.95); }

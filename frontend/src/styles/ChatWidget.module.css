@@ -1,0 +1,59 @@
+.chatContainer {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #C1623B;
+  color: #fff;
+  padding: 14px 20px;
+  border-radius: 18px;
+  box-shadow: 0 4px 14px rgba(58, 46, 42, 0.15);
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.chatContainer:hover {
+  background: #D87A54;
+}
+.chatBox {
+  position: fixed;
+  bottom: 80px;
+  right: 24px;
+  width: 300px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 18px rgba(58, 46, 42, 0.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.chatHeader {
+  background: #C1623B;
+  color: #fff;
+  padding: 10px;
+  font-weight: bold;
+}
+.textArea {
+  flex: 1;
+  padding: 12px;
+  color: #3A2E2A;
+  font-size: 0.9rem;
+}
+.textArea {
+  border-top: 1px solid #EAD9C7;
+  display: flex;
+}
+.textArea {
+  flex: 1;
+  border: none;
+  padding: 10px;
+  outline: none;
+}
+.sendBtn {
+  background: #C1623B;
+  color: #fff;
+  border: none;
+  padding: 0 12px;
+  cursor: pointer;
+}
+.sendBtn:hover {
+  background: #D87A54;
+}

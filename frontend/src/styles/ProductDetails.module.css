@@ -1,0 +1,156 @@
+@import './Theme.css';
+
+.detailsContainer {
+  max-width: 900px;      /* slightly wider */
+  margin: 3rem auto;
+  padding: 1rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;             /* more space between left and right */
+  align-items: start;    /* align left and right to top */
+}
+
+.left {
+  background: var(--bg-alt);
+  padding: 1rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-left: -200px;
+}
+
+.mainImage {
+  width: auto;
+  height: 500px;          
+  margin-bottom: 1rem;
+  border-radius: var(--radius);
+  background: var(--bg-alt);
+}
+
+.thumbnails {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+.thumb {
+  width: 100px;          /* rectangular */
+  height: 100px;          /* rectangular */
+  flex-shrink: 0;
+  border-radius: var(--radius);
+  cursor: pointer;
+  border: 2px solid transparent;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumb:hover {
+  border-color: rgb(69, 69, 230);
+  transform: scale(1.05);
+}
+
+.activeThumb {
+  border-color: blue;
+  transform: scale(1.05);
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+}
+
+.right h1 {
+  font-size: 2.2rem;
+  margin-bottom: 1.5rem;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.right p {
+  margin-bottom: 1.2rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.price {
+  font-weight: bold;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: var(--ink);
+}
+
+.qtySelector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.qtySelector input {
+  width: 60px;
+  text-align: center;
+  padding: 0.25rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--soft);
+}
+
+.qtySelector button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.qtySelector button:hover {
+  background: var(--accent-light);
+}
+
+.btnPrimary {
+  padding: 0.75rem;
+  background: var(--accent);
+  color: #fff;
+  border-radius: var(--radius);
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.15s ease;
+}
+
+.btnPrimary:hover {
+  background: var(--accent-light);
+  transform: translateY(-1px);
+}
+
+.loading {
+  text-align: center;
+  margin-top: 3rem;
+  font-weight: bold;
+}
+
+.error {
+  text-align: center;
+  margin-top: 3rem;
+  color: var(--accent);
+}

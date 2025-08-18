@@ -1,0 +1,107 @@
+:root {
+  --bg: #F5EEE7;           /* Cream */
+  --bg-alt: #EAD9C7;       /* Warm beige */
+  --ink: #3A2E2A;          /* Deep brown text */
+  --muted: #8C7A6E;        /* Muted text */
+  --soft: #CBBBA0;         /* Light brown accents */
+
+  /* Accent colors for buttons & highlights */
+  --accent: #C1623B;       /* Deep terracotta-orange */
+  --accent-light: #D87A54; /* Lighter terracotta */
+  --accent-dark: #9E4C2A;  /* Darker terracotta */
+
+  /* Cool tone for contrast */
+  --cool: #6B8E8E;         /* Muted teal */
+
+  --brand: #A08B7D;        /* Secondary soft brown */
+  --brand-ink: #fff;
+
+  --radius: 18px;
+  --radius-lg: 28px;
+  --shadow: 0 6px 16px rgba(58, 46, 42, 0.08);
+  --shadow-lg: 0 14px 40px rgba(58, 46, 42, 0.12);
+}
+
+/* Page */
+.body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding-top: 10px;
+  padding-bottom: 120px;
+}
+
+.authContainer {
+  max-width: 500px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background: var(--bg-alt);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: var(--ink);
+}
+
+.label {
+  display: block;
+  margin: 0.5rem 0 0.25rem;
+  font-weight: 200;
+  color: var(--ink);
+}
+
+.input {
+  width: 100%;
+  padding: 0.8rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--soft);
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+.input1 {
+  width: 100%;
+  padding: 0.8rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--soft);
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  padding-bottom: 90px;
+}
+
+.error {
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+
+.btnPrimary {
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--accent);
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.15s ease;
+}
+
+.btnPrimary:hover {
+  background: var(--accent-light);
+  transform: translateY(-1px);
+}
+
+.switch {
+  margin-top: 1rem;
+  color: var(--ink);
+}
+
+.switch a {
+  color: var(--accent);
+  font-weight: bold;
+}

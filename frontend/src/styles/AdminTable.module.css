@@ -1,0 +1,21 @@
+/* =========================
+   FRONTEND: frontend/src/styles/AdminTable.module.css
+   ========================= */
+.pageTitle { font-size:20px; font-weight:700; color:#0f172a; margin-bottom:12px; }
+.tableWrap { background:#fff; border-radius:12px; padding:12px; box-shadow:0 12px 30px rgba(2,6,23,0.05); overflow:auto; }
+.table { width:100%; border-collapse:collapse; min-width:720px; }
+.table thead { background:linear-gradient(90deg,#f1f5f9,#f8fafc); }
+.table th, .table td { padding:12px 14px; text-align:left; border-bottom:1px solid #eef2ff; color:#0b1220; }
+.thumb { width:64px; height:40px; object-fit:cover; border-radius:6px; }
+.btn { padding:8px 10px; border-radius:8px; background:#3b82f6; color:#fff; border:none; cursor:pointer; margin-right:8px; }
+.btnDanger { padding:8px 10px; border-radius:8px; background:#ef4444; color:#fff; border:none; cursor:pointer; }
+.btnPrimary { background:linear-gradient(90deg,#1e3a8a,#3b82f6); color:#fff; padding:10px 12px; border-radius:8px; border:none; cursor:pointer; }
+.btnGhost { background:#eef2ff; color:#0b1220; padding:10px 12px; border-radius:8px; border:none; cursor:pointer; }
+.form { display:flex; flex-direction:column; gap:10px; padding:12px; }
+.form label { display:flex; flex-direction:column; font-size:13px; color:#334155; }
+.form input, .form textarea { padding:10px; border:1px solid #e6eef9; border-radius:8px; }
+.formActions { display:flex; gap:10px; margin-top:8px; }
+.msg { padding:10px; background:#eef2ff; color:#1e3a8a; border-radius:8px; margin-bottom:12px; }
+.small { font-size:12px; color:#64748b; margin-top:4px; }
+.badge { padding:6px 10px; border-radius:8px; background:#f1f5f9; color:#0b1220; font-weight:600; }
+.select { padding:8px; border-radius:8px; border:1px solid #e6eef9; margin-right:8px; }

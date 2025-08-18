@@ -1,0 +1,128 @@
+.header {
+  background: var(--bg);
+  border-bottom: 1px solid whitesmoke;
+  padding: 0.6rem 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  height: 40px;
+  border-radius: 4px;
+}
+
+/* ====== NAVIGATION ====== */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.link {
+  color: var(--ink);
+  text-decoration: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius);
+  transition: background 0.2s;
+}
+
+.link:hover {
+  background: var(--bg-alt);
+}
+
+.cartIcon {
+  position: relative;
+  color: var(--ink);
+}
+
+.cartBadge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: var(--brand);
+  color: white;
+  font-size: 0.7rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 50%;
+}
+
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.userName {
+  font-size: 0.85rem;
+}
+
+.logoutBtn {
+  background: var(--bg-alt);
+  color: var(--ink);
+  border: none;
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.logoutBtn:hover {
+  background: var(--brand);
+  color: white;
+}
+
+.iconBtn {
+  background: var(--bg-alt);
+  padding: 0.4rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ====== HAMBURGER MENU ====== */
+.menuToggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+/* ====== MOBILE STYLES ====== */
+@media (max-width: 768px) {
+  .menuToggle {
+    display: block;
+  }
+
+  .nav {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background: var(--bg);
+    flex-direction: column;
+    align-items: flex-start;
+    width: 200px;
+    padding: 1rem;
+    gap: 0.8rem;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    border-left: 1px solid whitesmoke;
+  }
+
+  .navOpen {
+    transform: translateX(0);
+  }
+
+  .userSection {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+}
