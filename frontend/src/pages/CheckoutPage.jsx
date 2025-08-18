@@ -3,7 +3,7 @@ import api from "../api";
 import { useSelector, useDispatch } from "react-redux";
 import { clearCart } from "../redux/slices/cartSlice";
 import { useNavigate } from "react-router-dom";
-import "../styles/CheckoutPage.css"; // ✅ keep your CSS import
+import "../styles/CheckoutPage.css";
 
 const CheckoutPage = () => {
   const [loading, setLoading] = useState(false);
@@ -21,15 +21,15 @@ const CheckoutPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // ✅ Items price stays the same
-  const itemsPrice = cartItems.reduce((acc, item) => acc + item.price * item.qty, 0);
+  const itemsPrice = cartItems.reduce(
+    (acc, item) => acc + item.price * item.qty,
+    0
+  );
 
-  // ✅ NEW: shipping computed per item from cart (default to free if missing)
+  // ✅ Shipping cost is only computed if product has shippingType cod
   const shippingPrice = cartItems.reduce((acc, item) => {
-    const type = item.shippingType || "free";
-    const charge = Number(item.shippingCharge) || 0;
-    if (type === "cod") {
-      return acc + (charge * (item.qty || 1));
+    if (item.shippingType === "cod") {
+      return acc + (Number(item.shippingCharge) || 0) * (item.qty || 1);
     }
     return acc;
   }, 0);
@@ -76,13 +76,12 @@ const CheckoutPage = () => {
           qty: item.qty,
           price: item.price,
           image: item.image,
-          // (no change to payload structure of items beyond what's already here)
         })),
         shippingAddress: shippingData,
         paymentMethod: "razorpay",
         itemsPrice,
-        shippingPrice,   // ✅ NEW: correct shipping cost from cart items
-        totalPrice,      // ✅ NEW: items + shipping
+        shippingPrice,
+        totalPrice,
       };
 
       const createRes = await api.post("/api/orders", orderPayload);
@@ -119,7 +118,8 @@ const CheckoutPage = () => {
         },
         prefill: {
           name: shippingData.fullName,
-          email: JSON.parse(localStorage.getItem("amtUser"))?.user?.email || "",
+          email:
+            JSON.parse(localStorage.getItem("amtUser"))?.user?.email || "",
           contact: shippingData.phone,
         },
         theme: { color: "#16a34a" },
@@ -143,18 +143,22 @@ const CheckoutPage = () => {
       <div className="section">
         <h3 className="section-title">Shipping Details</h3>
         <div className="form-grid">
-          {["fullName", "address", "city", "postalCode", "country", "phone"].map((field) => (
-            <input
-              key={field}
-              type={field === "phone" ? "tel" : "text"}
-              name={field}
-              placeholder={field.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase())}
-              value={shippingData[field]}
-              onChange={handleChange}
-              className="input-field"
-              required
-            />
-          ))}
+          {["fullName", "address", "city", "postalCode", "country", "phone"].map(
+            (field) => (
+              <input
+                key={field}
+                type={field === "phone" ? "tel" : "text"}
+                name={field}
+                placeholder={field
+                  .replace(/([A-Z])/g, " $1")
+                  .replace(/^./, (str) => str.toUpperCase())}
+                value={shippingData[field]}
+                onChange={handleChange}
+                className="input-field"
+                required
+              />
+            )
+          )}
         </div>
       </div>
 
@@ -166,9 +170,20 @@ const CheckoutPage = () => {
             <img src={item.image} alt={item.name} className="cart-img" />
             <div className="cart-details">
               <h4 className="cart-name">{item.name}</h4>
-              <p className="cart-qty">Qty: {item.qty} × ₹{item.price.toFixed(2)}</p>
+              <p className="cart-qty">
+                Qty: {item.qty} × ₹{item.price.toFixed(2)}
+              </p>
+
+              {/* ✅ Show COD delivery charges line if applicable */}
+              {item.shippingType === "cod" && (
+                <p className="cod-note">
+                  Delivery charges approx 3000rs, to be paid at time of delivery.
+                </p>
+              )}
             </div>
-            <div className="cart-total">₹{(item.price * item.qty).toFixed(2)}</div>
+            <div className="cart-total">
+              ₹{(item.price * item.qty).toFixed(2)}
+            </div>
           </div>
         ))}
         <div className="summary">

@@ -64,6 +64,13 @@ const OrderConfirmation = () => {
                 <div>
                   <p className={styles.itemName}>{item.name}</p>
                   <p className={styles.itemQty}>Qty: {item.qty}</p>
+
+                  {/* ✅ COD message shown here too */}
+                  {item.shippingType === "cod" && (
+                    <p className={styles.codNote}>
+                      Delivery charges approx 3000rs, to be paid at time of delivery.
+                    </p>
+                  )}
                 </div>
               </div>
               <div className={styles.itemPrice}>
