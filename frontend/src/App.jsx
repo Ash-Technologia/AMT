@@ -7,7 +7,7 @@ import Home from "./pages/Home";
 import Shop from "./pages/Shop";
 import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
-import OrderConfirmation from "./pages/orderConfirmation";
+import OrderConfirmation from "./pages/OrderConfirmation";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Login from "./components/Login";
