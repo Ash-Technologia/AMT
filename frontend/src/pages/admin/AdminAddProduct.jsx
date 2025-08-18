@@ -13,7 +13,10 @@ const AdminAddProduct = () => {
     slug: "",
     image: null,
     images: [],
-     youtubeLink: "",
+    youtubeLink: "",
+    // ✅ NEW SHIPPING FIELDS
+    shippingType: "free",     // "free" | "cod"
+    shippingCharge: 0,        // number
   });
 
   const [categories, setCategories] = useState([]);
@@ -39,6 +42,7 @@ const AdminAddProduct = () => {
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
+    // (kept as-is from your original)
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -61,9 +65,13 @@ const AdminAddProduct = () => {
       data.append("category", formData.category);
       data.append("countInStock", formData.countInStock);
       data.append("slug", formData.slug);
+      data.append("youtubeLink", formData.youtubeLink || "");
+
+      // ✅ NEW shipping fields
+      data.append("shippingType", formData.shippingType);
+      data.append("shippingCharge", formData.shippingType === "free" ? 0 : formData.shippingCharge || 0);
 
       data.append("image", formData.image);
-
       formData.images.forEach((file) => {
         data.append("images", file);
       });
@@ -82,6 +90,9 @@ const AdminAddProduct = () => {
         slug: "",
         image: null,
         images: [],
+        youtubeLink: "",
+        shippingType: "free",
+        shippingCharge: 0,
       });
     } catch (error) {
       console.error("Add product error:", error);
@@ -194,16 +205,43 @@ const AdminAddProduct = () => {
             />
           </label>
 
-  <div>
-  <label>YouTube Link</label>
-  <input
-    type="text"
-    name="youtubeLink"
-    value={formData.youtubeLink || ""}
-    onChange={handleChange}
-    placeholder="Enter YouTube video URL"
-  />
-</div>
+          <div>
+            <label>YouTube Link</label>
+            <input
+              type="text"
+              name="youtubeLink"
+              value={formData.youtubeLink || ""}
+              onChange={handleChange}
+              placeholder="Enter YouTube video URL"
+            />
+          </div>
+
+          {/* ✅ NEW: Shipping controls */}
+          <label>
+            Shipping Type
+            <select
+              name="shippingType"
+              value={formData.shippingType}
+              onChange={handleChange}
+            >
+              <option value="free">Free Shipping</option>
+              <option value="cod">Cash on Delivery (shipping charges)</option>
+            </select>
+          </label>
+
+          <label>
+            Shipping Charge (₹)
+            <input
+              type="number"
+              name="shippingCharge"
+              value={formData.shippingType === "free" ? 0 : formData.shippingCharge}
+              onChange={handleChange}
+              min="0"
+              step="0.01"
+              placeholder="Enter shipping charge"
+              disabled={formData.shippingType === "free"}
+            />
+          </label>
 
           <button className={styles.btnPrimary} type="submit">
             Add Product

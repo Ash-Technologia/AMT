@@ -17,7 +17,10 @@ const ManageProducts = () => {
     category: "",
     countInStock: 0,
     slug: "",
-     youtubeLink: "",   // ✅ add this
+    youtubeLink: "",   // ✅ existing
+    // ✅ NEW shipping fields for edit form
+    shippingType: "free",
+    shippingCharge: 0,
   });
   const [imageFile, setImageFile] = useState(null);
   const [additionalImages, setAdditionalImages] = useState([]); // Holds URLs + new Files
@@ -58,7 +61,10 @@ const ManageProducts = () => {
       category: p.category || "",
       countInStock: p.countInStock || 0,
       slug: p.slug || "",
-     youtubeLink: p.youtubeLink || "",   // ✅ correct
+      youtubeLink: p.youtubeLink || "",   // ✅ keep
+      // ✅ NEW shipping fields
+      shippingType: p.shippingType || "free",
+      shippingCharge: p.shippingCharge ?? 0,
     });
     setImageFile(null);
     setAdditionalImages(p.additionalImages || []);
@@ -74,7 +80,9 @@ const ManageProducts = () => {
       category: "",
       countInStock: 0,
       slug: "",
-      youtubeLink: "",   // ✅ add this
+      youtubeLink: "",
+      shippingType: "free",
+      shippingCharge: 0,
     });
     setImageFile(null);
     setAdditionalImages([]);
@@ -112,6 +120,13 @@ const ManageProducts = () => {
       fd.append("countInStock", form.countInStock);
       fd.append("slug", form.slug);
       fd.append("youtubeLink", form.youtubeLink);
+
+      // ✅ NEW shipping fields
+      fd.append("shippingType", form.shippingType);
+      fd.append(
+        "shippingCharge",
+        form.shippingType === "free" ? 0 : form.shippingCharge ?? 0
+      );
 
       if (imageFile) fd.append("image", imageFile);
 
@@ -272,17 +287,45 @@ const ManageProducts = () => {
               </div>
             )}
 
-  <label>
-  YouTube Link
-  <input
-    type="text"
-    className={styles.input}
-    name="youtubeLink"
-    value={form.youtubeLink}
-    onChange={handleChange}
-    placeholder="Enter YouTube video URL"
-  />
-</label>
+            <label>
+              YouTube Link
+              <input
+                type="text"
+                className={styles.input}
+                name="youtubeLink"
+                value={form.youtubeLink}
+                onChange={handleChange}
+                placeholder="Enter YouTube video URL"
+              />
+            </label>
+
+            {/* ✅ NEW: Shipping controls in edit */}
+            <label>
+              Shipping Type
+              <select
+                className={styles.input}
+                name="shippingType"
+                value={form.shippingType}
+                onChange={handleChange}
+              >
+                <option value="free">Free Shipping</option>
+                <option value="cod">Cash on Delivery (shipping charges)</option>
+              </select>
+            </label>
+
+            <label>
+              Shipping Charge (₹)
+              <input
+                type="number"
+                className={styles.input}
+                name="shippingCharge"
+                value={form.shippingType === "free" ? 0 : form.shippingCharge}
+                onChange={handleChange}
+                min="0"
+                step="0.01"
+                disabled={form.shippingType === "free"}
+              />
+            </label>
 
             <div className={styles.formActions}>
               <button className={styles.btnPrimary} type="submit">

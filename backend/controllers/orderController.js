@@ -1,7 +1,7 @@
 import Razorpay from "razorpay";
 import Order from "../models/Order.js";
 import Product from "../models/Product.js";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 dotenv.config();
 
 const razorpay = new Razorpay({
@@ -9,33 +9,64 @@ const razorpay = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET || "",
 });
 
-// Create order (server side - create Razorpay order)
+// @desc    Create order (with optional Razorpay order)
+// @route   POST /api/orders
+// @access  Private
 export const createOrder = async (req, res) => {
   try {
-    const { orderItems, shippingAddress, paymentMethod, itemsPrice, shippingPrice, taxPrice, totalPrice } = req.body;
-    if (!orderItems || orderItems.length === 0) return res.status(400).json({ message: "No order items" });
+    const { orderItems, shippingAddress, paymentMethod } = req.body;
+    if (!orderItems || orderItems.length === 0)
+      return res.status(400).json({ message: "No order items" });
 
-    // Validate all orderItems have product ID
-    for (const item of orderItems) {
-      if (!item.product) {
-        return res.status(400).json({ message: "Product ID missing in order items" });
-      }
-    }
+    let itemsPrice = 0;
+    let shippingPrice = 0;
+    let shippingType = "free";
 
-    // create order in DB (not paid yet)
+    // Calculate prices and fetch product shipping info
+    const validatedItems = await Promise.all(
+      orderItems.map(async (item) => {
+        const product = await Product.findById(item.product);
+        if (!product) throw new Error("Product not found");
+
+        itemsPrice += product.price * item.qty;
+
+        // shipping logic
+        if (product.shippingType === "cod") {
+          shippingType = "cod";
+          shippingPrice += product.shippingCharge; // pay on delivery
+        } else {
+          // default free shipping (0)
+          shippingType = "free";
+        }
+
+        return {
+          product: product._id,
+          name: product.name,
+          image: product.image,
+          price: product.price,
+          qty: item.qty,
+        };
+      })
+    );
+
+    const totalPrice = itemsPrice + shippingPrice;
+
+    // create order in DB
     const order = new Order({
       user: req.user._id,
-      orderItems,
+      orderItems: validatedItems,
       shippingAddress,
       paymentMethod,
       itemsPrice,
       shippingPrice,
-      taxPrice,
+      shippingType,
+      taxPrice: 0,
       totalPrice,
       isPaid: false,
     });
     const createdOrder = await order.save();
 
+    // if razorpay payment
     if (paymentMethod === "razorpay") {
       const options = {
         amount: Math.round(totalPrice * 100),
@@ -48,12 +79,12 @@ export const createOrder = async (req, res) => {
 
     res.status(201).json({ order: createdOrder });
   } catch (err) {
-    console.error(err);
+    console.error("createOrder error:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
 
-// Payment verification endpoint
+// @desc    Verify Razorpay payment
 export const verifyPayment = async (req, res) => {
   try {
     const { razorpay_payment_id, razorpay_order_id, razorpay_signature, orderId } = req.body;
@@ -71,7 +102,7 @@ export const verifyPayment = async (req, res) => {
     };
     await order.save();
 
-    // Decrease stock quantity for each ordered product
+    // decrease stock
     for (const item of order.orderItems) {
       const prod = await Product.findById(item.product);
       if (prod) {
@@ -82,11 +113,12 @@ export const verifyPayment = async (req, res) => {
 
     res.json({ message: "Payment verified and order updated", order });
   } catch (err) {
-    console.error(err);
+    console.error("verifyPayment error:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
 
+// @desc    Get order by ID
 export const getOrderById = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id).populate("user", "name email");
@@ -102,6 +134,7 @@ export const getOrderById = async (req, res) => {
   }
 };
 
+// @desc    Get logged in user orders
 export const getUserOrders = async (req, res) => {
   try {
     const orders = await Order.find({ user: req.user._id });
@@ -112,9 +145,12 @@ export const getUserOrders = async (req, res) => {
   }
 };
 
+// @desc    Get all orders (admin)
 export const getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find({}).populate("user", "name email").sort({ createdAt: -1 });
+    const orders = await Order.find({})
+      .populate("user", "name email")
+      .sort({ createdAt: -1 });
     res.json(orders);
   } catch (err) {
     console.error(err);
@@ -122,6 +158,7 @@ export const getAllOrders = async (req, res) => {
   }
 };
 
+// @desc    Update order status (admin)
 export const updateOrderStatus = async (req, res) => {
   try {
     const { status } = req.body;

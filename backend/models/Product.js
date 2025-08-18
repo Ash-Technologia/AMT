@@ -14,6 +14,16 @@ const productSchema = new mongoose.Schema(
     additionalImages: [{ type: String }],
     cloudinaryPublicId: { type: String },
     youtubeLink: { type: String }, // 🔹 New YouTube link field
+    // 🔹 New Shipping Fields
+    shippingType: {
+      type: String,
+      enum: ["free", "cod"],
+      default: "free",
+    },
+    shippingCharge: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );

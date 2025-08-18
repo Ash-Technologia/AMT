@@ -32,7 +32,8 @@ const orderSchema = new mongoose.Schema({
   isDelivered: { type: Boolean, default: false },
   deliveredAt: Date,
   status: { type: String, default: "Processing" },
-
+  shippingType: { type: String, default: "free" }, 
+  shippingCharge: { type: Number, default: 0 },
   stockUpdated: { type: Boolean, default: false },  // flag to prevent multiple stock decrements
 }, { timestamps: true });
 

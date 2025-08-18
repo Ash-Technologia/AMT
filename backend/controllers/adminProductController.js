@@ -7,7 +7,7 @@ import cloudinary, { uploadBufferToCloudinary } from "../config/cloudinary.js";
 // ================== ADD PRODUCT ==================
 export const addProduct = async (req, res) => {
   try {
-    const { name, description, price, category, countInStock, youtubeLink } = req.body;
+    const { name, description, price, category, countInStock, youtubeLink, shippingType, shippingCharge } = req.body;
 
     const stockQty = Number(countInStock);
     if (isNaN(stockQty)) {
@@ -50,6 +50,8 @@ export const addProduct = async (req, res) => {
       additionalImages: additionalImageUrls,
       cloudinaryPublicId: publicId,
       youtubeLink, // 🔹
+      shippingType: shippingType || "free",     // 🔹 default if not provided
+      shippingCharge: shippingCharge || 0,      // 🔹 default 0
     });
 
     const created = await product.save();
@@ -135,7 +137,7 @@ export const updateProduct = async (req, res) => {
       ...newAdditionalImages,
     ];
 
-    const { name, description, price, category, countInStock, youtubeLink } =
+    const { name, description, price, category, countInStock, youtubeLink, shippingType, shippingCharge } =
       req.body;
 
     const stockQty = Number(countInStock);
@@ -152,6 +154,8 @@ export const updateProduct = async (req, res) => {
     product.cloudinaryPublicId = publicId ?? product.cloudinaryPublicId;
     product.additionalImages = additionalImageUrls;
     product.youtubeLink = youtubeLink ?? product.youtubeLink; // 🔹
+    product.shippingType = shippingType ?? product.shippingType;
+    product.shippingCharge = shippingCharge ?? product.shippingCharge;
 
     const updated = await product.save();
     res.json(updated);

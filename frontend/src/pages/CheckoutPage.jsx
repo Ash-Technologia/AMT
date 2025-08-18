@@ -3,7 +3,7 @@ import api from "../api";
 import { useSelector, useDispatch } from "react-redux";
 import { clearCart } from "../redux/slices/cartSlice";
 import { useNavigate } from "react-router-dom";
-import "../styles/CheckoutPage.css"; // ✅ NEW CSS import
+import "../styles/CheckoutPage.css"; // ✅ keep your CSS import
 
 const CheckoutPage = () => {
   const [loading, setLoading] = useState(false);
@@ -21,8 +21,19 @@ const CheckoutPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // ✅ Items price stays the same
   const itemsPrice = cartItems.reduce((acc, item) => acc + item.price * item.qty, 0);
-  const shippingPrice = itemsPrice > 500 ? 0 : 50;
+
+  // ✅ NEW: shipping computed per item from cart (default to free if missing)
+  const shippingPrice = cartItems.reduce((acc, item) => {
+    const type = item.shippingType || "free";
+    const charge = Number(item.shippingCharge) || 0;
+    if (type === "cod") {
+      return acc + (charge * (item.qty || 1));
+    }
+    return acc;
+  }, 0);
+
   const totalPrice = itemsPrice + shippingPrice;
 
   const validateShipping = () => {
@@ -65,12 +76,13 @@ const CheckoutPage = () => {
           qty: item.qty,
           price: item.price,
           image: item.image,
+          // (no change to payload structure of items beyond what's already here)
         })),
         shippingAddress: shippingData,
         paymentMethod: "razorpay",
         itemsPrice,
-        shippingPrice,
-        totalPrice,
+        shippingPrice,   // ✅ NEW: correct shipping cost from cart items
+        totalPrice,      // ✅ NEW: items + shipping
       };
 
       const createRes = await api.post("/api/orders", orderPayload);
@@ -136,7 +148,7 @@ const CheckoutPage = () => {
               key={field}
               type={field === "phone" ? "tel" : "text"}
               name={field}
-              placeholder={field.replace(/([A-Z])/g, " $1").replace(/^./, str => str.toUpperCase())}
+              placeholder={field.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase())}
               value={shippingData[field]}
               onChange={handleChange}
               className="input-field"

@@ -45,6 +45,9 @@ const ProductDetails = () => {
         price: product.price,
         image: mainImage,
         qty,
+        // ✅ NEW: include shipping info with cart item
+        shippingType: product.shippingType || "free",
+        shippingCharge: product.shippingType === "cod" ? (product.shippingCharge || 0) : 0,
       })
     );
     alert(`${product.name} (Qty: ${qty}) added to cart!`);
@@ -71,9 +74,7 @@ const ProductDetails = () => {
               {thumbnails.map((img, idx) => (
                 <div
                   key={idx}
-                  className={`${styles.thumb} ${
-                    mainImage === img ? styles.activeThumb : ""
-                  }`}
+                  className={`${styles.thumb} ${mainImage === img ? styles.activeThumb : ""}`}
                   onClick={() => setMainImage(img)}
                   onMouseEnter={() => setMainImage(img)} // hover updates main image
                 >
@@ -91,16 +92,15 @@ const ProductDetails = () => {
 
           {/* ✅ YouTube link (optional) */}
           {product.youtubeLink && (
-  <a
-    href={product.youtubeLink}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="text-black hover:text-blue-600 mb-3"
-  >
-    To watch on YouTube, Click Here
-  </a>
-)}
-
+            <a
+              href={product.youtubeLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-black hover:text-blue-600 mb-3"
+            >
+              To watch on YouTube, Click Here
+            </a>
+          )}
 
           <div className={styles.qtySelector}>
             <button onClick={decreaseQty}>-</button>
