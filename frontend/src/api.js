@@ -4,7 +4,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "", // if empty, dev proxy or same origin
+  baseURL: import.meta.env.VITE_API_URL || "", // if empty, dev proxy or same origin
   withCredentials: true,
 });
 
