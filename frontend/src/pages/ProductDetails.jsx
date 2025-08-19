@@ -45,9 +45,9 @@ const ProductDetails = () => {
         price: product.price,
         image: mainImage,
         qty,
-        // ✅ NEW: include shipping info with cart item
         shippingType: product.shippingType || "free",
-        shippingCharge: product.shippingType === "cod" ? (product.shippingCharge || 0) : 0,
+        shippingCharge:
+          product.shippingType === "cod" ? product.shippingCharge || 0 : 0,
       })
     );
     alert(`${product.name} (Qty: ${qty}) added to cart!`);
@@ -57,7 +57,9 @@ const ProductDetails = () => {
   if (error) return <p className={styles.error}>{error}</p>;
   if (!product) return null;
 
-  const thumbnails = [product.image, ...(product.additionalImages || [])].filter(Boolean);
+  const thumbnails = [product.image, ...(product.additionalImages || [])].filter(
+    Boolean
+  );
 
   return (
     <div className={styles.detailsContainer}>
@@ -74,9 +76,11 @@ const ProductDetails = () => {
               {thumbnails.map((img, idx) => (
                 <div
                   key={idx}
-                  className={`${styles.thumb} ${mainImage === img ? styles.activeThumb : ""}`}
+                  className={`${styles.thumb} ${
+                    mainImage === img ? styles.activeThumb : ""
+                  }`}
                   onClick={() => setMainImage(img)}
-                  onMouseEnter={() => setMainImage(img)} // hover updates main image
+                  onMouseEnter={() => setMainImage(img)}
                 >
                   <img src={img} alt={`Thumbnail ${idx}`} />
                 </div>
@@ -88,19 +92,20 @@ const ProductDetails = () => {
         {/* Right: Details */}
         <div className={styles.right}>
           <h1>{product.name}</h1>
-          <p>{product.description}</p>
+          <p className={styles.description}>{product.description}</p>
 
-          {/* ✅ YouTube link (optional) */}
           {product.youtubeLink && (
             <a
               href={product.youtubeLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-black hover:text-blue-600 mb-3"
+              className={styles.youtubeLink}
             >
-              To watch on YouTube, Click Here
+              🎥 Watch on YouTube
             </a>
           )}
+
+          <p className={styles.price}>₹{product.price}</p>
 
           <div className={styles.qtySelector}>
             <button onClick={decreaseQty}>-</button>
@@ -117,7 +122,7 @@ const ProductDetails = () => {
           </div>
 
           <button className={styles.btnPrimary} onClick={addToCartHandler}>
-            Add to Cart
+            🛒 Add to Cart
           </button>
         </div>
       </div>
