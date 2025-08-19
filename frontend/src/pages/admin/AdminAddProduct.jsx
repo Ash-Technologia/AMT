@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import AdminLayout from "../../layouts/AdminLayout";
 import styles from "../../styles/AdminStyles.module.css";
+import api from "../../api";
 
 const AdminAddProduct = () => {
   const [formData, setFormData] = useState({
@@ -24,7 +24,7 @@ const AdminAddProduct = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const { data } = await axios.get("/api/categories");
+        const { data } = await api.get("/api/categories");
         setCategories(data);
       } catch (error) {
         console.error("Error loading categories:", error);

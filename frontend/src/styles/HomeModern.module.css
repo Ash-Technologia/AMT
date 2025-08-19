@@ -278,4 +278,29 @@
   .heroSubtitle {
     font-size: 1rem;
   }
+
+  .sectionAlt {
+  background: var(--bg-alt);  /* Changed from gradient to warm beige */
+  padding: 10px 20px 30px;
+  border-radius: var(--radius-lg);
 }
+
+.logo {
+  max-width: 250px;
+}
+
+.heroNoImage {
+  padding: 30px 20px;
+  text-align: center;
+  border-radius: var(--radius-lg);
+  margin-bottom: 50px;
+  padding-top: 40px;
+  margin-top: 20px;
+  background: var(--bg-alt);
+}
+
+.title {
+  margin-top: 4px;
+}
+}
+

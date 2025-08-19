@@ -5,6 +5,8 @@
   text-align: center;
   font-size: 0.9rem;
   border-top: 3px solid #C1623B;
+  overflow-y: hidden;
+  width: 100%;
 }
 .footerLinks {
   display: flex;

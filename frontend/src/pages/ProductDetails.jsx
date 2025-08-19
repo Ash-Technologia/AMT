@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/slices/cartSlice";
 import styles from "../styles/ProductDetails.module.css";
+import api from "../api";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -17,7 +17,7 @@ const ProductDetails = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const { data } = await axios.get(`/api/products/${id}`);
+        const { data } = await api.get(`/api/products/${id}`);
         setProduct(data);
         setMainImage(data.image || (data.additionalImages?.[0] || ""));
       } catch (err) {

@@ -12,7 +12,6 @@ import productRoutes from "./routes/productRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import categoryRoutes from './routes/categoryRoute.js';
 import userRoutes from './routes/userRoutes.js';
-import blogRoutes from "./routes/blogRoutes.js";
 import supportRoutes from "./routes/supportRoutes.js";
 import adminProductRoutes from "./routes/adminProductRoutes.js";
 import adminOrderRoutes from "./routes/adminOrderRoutes.js";
@@ -51,7 +50,6 @@ app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/users", userRoutes);
-app.use("/api/blog", blogRoutes);
 app.use("/api/support", supportRoutes);
 app.use("/api/admin", adminProductRoutes); // admin products
 app.use("/api/admin/orders", adminOrderRoutes);

@@ -1,7 +1,4 @@
-// =========================
-// frontend/src/components/Header.jsx
-// =========================
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaShoppingCart, FaUser, FaBars, FaTimes } from "react-icons/fa";
 import { useSelector } from "react-redux";
@@ -22,6 +19,14 @@ const Header = () => {
 
   const [menuOpen, setMenuOpen] = useState(false);
 
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.classList.add("navOpenActive");
+    } else {
+      document.body.classList.remove("navOpenActive");
+    }
+  }, [menuOpen]);
+
   return (
     <header className={styles.header}>
       <div className={styles.container}>
@@ -30,17 +35,19 @@ const Header = () => {
           <img src="/assets/logo.jpg" alt="AMT Logo" className={styles.logo} />
         </Link>
 
-        {/* Hamburger Button */}
-        <button
-          className={styles.menuToggle}
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle menu"
-        >
-          {menuOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
-        </button>
-
-        {/* Navigation */}
+        {/* Nav (center on desktop, sidebar on mobile) */}
         <nav className={`${styles.nav} ${menuOpen ? styles.navOpen : ""}`}>
+          {/* Close Button (mobile only) */}
+          {menuOpen && (
+            <button
+              className={styles.closeBtn}
+              onClick={() => setMenuOpen(false)}
+              aria-label="Close menu"
+            >
+              <FaTimes />
+            </button>
+          )}
+
           <Link to="/" className={styles.link} onClick={() => setMenuOpen(false)}>Home</Link>
           <Link to="/shop" className={styles.link} onClick={() => setMenuOpen(false)}>Shop</Link>
           <Link to="/about" className={styles.link} onClick={() => setMenuOpen(false)}>About Us</Link>
@@ -51,13 +58,6 @@ const Header = () => {
             <Link to="/admin" className={styles.link} onClick={() => setMenuOpen(false)}>Admin Dashboard</Link>
           )}
 
-          <Link to="/cart" className={`${styles.cartIcon}`} aria-label="View cart" onClick={() => setMenuOpen(false)}>
-            <FaShoppingCart size={20} />
-            {totalQty > 0 && (
-              <span className={styles.cartBadge}>{totalQty}</span>
-            )}
-          </Link>
-
           {user ? (
             <div className={styles.userSection}>
               <span className={styles.userName}>Hi, {user.name}</span>
@@ -66,11 +66,33 @@ const Header = () => {
               </button>
             </div>
           ) : (
-            <Link to="/login" className={styles.iconBtn} aria-label="Login" onClick={() => setMenuOpen(false)}>
+            <Link
+              to="/login"
+              className={styles.iconBtn}
+              aria-label="Login"
+              onClick={() => setMenuOpen(false)}
+            >
               <FaUser size={20} />
             </Link>
           )}
         </nav>
+
+        {/* Right Section */}
+        <div className={styles.rightSection}>
+          <Link to="/cart" className={styles.cartIcon} aria-label="View cart">
+            <FaShoppingCart size={20} />
+            {totalQty > 0 && <span className={styles.cartBadge}>{totalQty}</span>}
+          </Link>
+
+          {/* Hamburger */}
+          <button
+            className={styles.menuToggle}
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle menu"
+          >
+            <FaBars size={22} />
+          </button>
+        </div>
       </div>
     </header>
   );

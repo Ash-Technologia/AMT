@@ -120,10 +120,16 @@
 /* Responsive */
 @media (max-width: 768px) {
   .hero {
-  max-width: 500px;
+  max-width: 300px;
   }
 
-  .productCard,
+  .page {
+    height: 690px;
+  }
+
+  .productCard {
+    padding-bottom: 40px;
+  }
   .reverse {
     flex-direction: column;
     text-align: center;
