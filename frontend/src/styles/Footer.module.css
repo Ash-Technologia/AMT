@@ -7,6 +7,7 @@
   border-top: 3px solid #C1623B;
   overflow-y: hidden;
   width: 100%;
+  gap: 2rem;
 }
 .footerLinks {
   display: flex;

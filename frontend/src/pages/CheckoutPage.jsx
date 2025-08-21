@@ -26,7 +26,6 @@ const CheckoutPage = () => {
     0
   );
 
-  // ✅ Shipping cost is only computed if product has shippingType cod
   const shippingPrice = cartItems.reduce((acc, item) => {
     if (item.shippingType === "cod") {
       return acc + (Number(item.shippingCharge) || 0) * (item.qty || 1);
@@ -54,20 +53,11 @@ const CheckoutPage = () => {
     setShippingData({ ...shippingData, [e.target.name]: e.target.value });
   };
 
-  const loadRazorpayScript = () =>
-    new Promise((resolve) => {
-      if (window.Razorpay) return resolve(true);
-      const script = document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
-      document.body.appendChild(script);
-    });
-
-  const handleRazorpay = async () => {
+  const handlePhonePe = async () => {
     if (!validateShipping()) return;
     setLoading(true);
     setError("");
+
     try {
       const orderPayload = {
         orderItems: cartItems.map((item) => ({
@@ -78,56 +68,28 @@ const CheckoutPage = () => {
           image: item.image,
         })),
         shippingAddress: shippingData,
-        paymentMethod: "razorpay",
+        paymentMethod: "phonepe",
         itemsPrice,
         shippingPrice,
         totalPrice,
       };
 
-      const createRes = await api.post("/api/orders", orderPayload);
-      const { razorpayOrder, order } = createRes.data;
+      const res = await api.post("/api/orders/phonepe", orderPayload);
+      const { paymentUrl, orderId } = res.data;
 
-      const ok = await loadRazorpayScript();
-      if (!ok) {
-        setError("Razorpay SDK failed to load.");
+      if (!paymentUrl) {
+        setError("Failed to initiate PhonePe payment.");
         setLoading(false);
         return;
       }
 
-      const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY || "",
-        amount: razorpayOrder.amount,
-        currency: razorpayOrder.currency,
-        name: "AMT",
-        description: `Order ${order._id}`,
-        order_id: razorpayOrder.id,
-        handler: async (response) => {
-          try {
-            await api.post("/api/orders/verify", {
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_signature: response.razorpay_signature,
-              orderId: order._id,
-            });
-            dispatch(clearCart());
-            alert("Payment Successful!");
-            navigate(`/order/${order._id}`);
-          } catch (verifyErr) {
-            setError("Payment verification failed");
-          }
-        },
-        prefill: {
-          name: shippingData.fullName,
-          email:
-            JSON.parse(localStorage.getItem("amtUser"))?.user?.email || "",
-          contact: shippingData.phone,
-        },
-        theme: { color: "#16a34a" },
-      };
+      // clear cart on redirect
+      dispatch(clearCart());
 
-      new window.Razorpay(options).open();
+      // Redirect to PhonePe
+      window.location.href = paymentUrl;
     } catch (err) {
-      setError(err?.response?.data?.message || "Failed to create order");
+      setError(err?.response?.data?.message || "Failed to create PhonePe order");
     } finally {
       setLoading(false);
     }
@@ -139,7 +101,6 @@ const CheckoutPage = () => {
 
       {error && <div className="error-box">{error}</div>}
 
-      {/* Shipping Form */}
       <div className="section">
         <h3 className="section-title">Shipping Details</h3>
         <div className="form-grid">
@@ -162,7 +123,6 @@ const CheckoutPage = () => {
         </div>
       </div>
 
-      {/* Cart Summary */}
       <div className="section">
         <h3 className="section-title">Order Summary</h3>
         {cartItems.map((item) => (
@@ -173,8 +133,6 @@ const CheckoutPage = () => {
               <p className="cart-qty">
                 Qty: {item.qty} × ₹{item.price.toFixed(2)}
               </p>
-
-              {/* ✅ Show COD delivery charges line if applicable */}
               {item.shippingType === "cod" && (
                 <p className="cod-note">
                   Delivery charges approx 3000rs, to be paid at time of delivery.
@@ -203,11 +161,11 @@ const CheckoutPage = () => {
       </div>
 
       <button
-        onClick={handleRazorpay}
+        onClick={handlePhonePe}
         disabled={loading}
         className={`pay-btn ${loading ? "disabled" : ""}`}
       >
-        {loading ? "Processing Payment..." : "Pay with Razorpay"}
+        {loading ? "Processing Payment..." : "Pay with PhonePe"}
       </button>
     </div>
   );
