@@ -12,7 +12,7 @@ const Policies = () => {
  <p className="font-bold px-10 py-5">2.Return Policy: </p>
  <p className="px-20">We do not provide return as of now.</p>
  <p className="font-bold px-10 py-5">3.Shipping Policy: </p>
- <p className="px-20 py-20">Processing Time: All orders are delivered withing 7-10 business days.</p>
+ <p className="px-20">Processing Time: All orders are delivered withing 7-10 business days.</p>
     </div>
   );
 };
