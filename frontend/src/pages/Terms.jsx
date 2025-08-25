@@ -16,7 +16,7 @@ by a computer system and does not require any physical or digital signatures.
 <p className="px-10">2.
 This document is published in accordance with the provisions of Rule 3 (1) of the Information
 Technology (Intermediaries guidelines) Rules, 2011 that require publishing the rules and
-regulations, privacy policy and Terms of Use for access or usage of domain name  ('Website'), including the related mobile site and mobile application 
+regulations, privacy policy and Terms of Use for access or usage of https://amt-health.vercel.app/  ('Website'), including the related mobile site and mobile application 
 health.vercel.app/
 (hereinafter referred to as 'Platform').
 </p>

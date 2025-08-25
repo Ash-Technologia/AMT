@@ -23,8 +23,9 @@ import ManageOrders from "./pages/admin/ManageOrders";
 import ManageUsers from "./pages/admin/ManageUsers";
 import AdminMessages from "./pages/admin/AdminMessages";
 import Terms from "./pages/Terms";
-import Refund from "./pages/Refund";
 import Privacy from "./pages/Privacy";
+import Policies from "./pages/Policies";
+
 export default function App() {
   return (
     <div className="flex flex-col min-h-screen">
@@ -56,8 +57,8 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/terms" element={<Terms />} />
-          <Route path="/refund" element={<Refund />} />
           <Route path="/privacy" element={<Privacy />} />
+          <Route path="/policies" element={<Policies />} />
         <Route path="/admin/add-product" element={<AdminAddProduct />} />
           {/* Admin route wrapped inside AdminRoute for admin-only access */}
           <Route

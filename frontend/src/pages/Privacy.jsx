@@ -99,13 +99,7 @@ services for which we consider such information to be necessary.
 Changes to this Privacy Policy- Please check our Privacy Policy periodically for changes. We may
 update this Privacy Policy to reflect changes to our information practices. We may alert / notify you
 about the significant changes to the Privacy Policy, in the manner as may be required under applicable
-laws.
-Grievance Officer
-Insert Name of the Office:
-Designation:
-Insert Name and Address of the Company:
-Contact us:
-Phone: Time: Monday - Friday(9:00 - 18:00) </p>
+laws.</p>
     </div>
   );
 };

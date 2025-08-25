@@ -16,11 +16,11 @@ const Footer = () => {
           <Link to="/privacy" className={styles.footerLink}>
             Privacy Policy
           </Link>
-          <Link to="/refund" className={styles.footerLink}>
-            Refund Policy
+          <Link to="/policies" className={styles.footerLink}>
+          Other Policies
           </Link>
         </div>
-        <p>&copy; {new Date().getFullYear()} AMT. All rights reserved.(AAYUSH HEALTH CARE)</p>
+        <p>&copy; {new Date().getFullYear()} AMT. All rights reserved.  (ASHOK PAPER PRODUCTS)</p>
       </div>
     </footer>
   );

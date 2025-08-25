@@ -4,8 +4,8 @@ import styles from "../styles/About.module.css";
 const products = [
   {
     id:1,
-    title: "About Amrut Singhavi",
-    desc1: "Founder of AMT Health Care products and Health Care Practitioner.",
+    title: "About Our Founder",
+    desc1: "Founder of AMT Health Care products and Health Care Practitioner.[Amrut Singhavi]",
     desc2: "Diabetes Educator, Acupressure MD, Neurotherapy, GRAD Expert, Help Practitioner, Vibration Therapy.",
     desc3: "Our Mission DRUG FREE INDIA!!",
     desc4: "For virtual OPD, contact(only whatsapp): +91 9822843015",

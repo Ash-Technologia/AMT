@@ -1,7 +1,5 @@
 import express from "express";
 import {
-  createOrder,
-  verifyPayment,
   getOrderById,
   getUserOrders,
   getAllOrders,
@@ -12,9 +10,6 @@ import {
 import { protect, admin } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
-
-router.post("/", protect, createOrder);
-router.post("/verify", protect, verifyPayment);
 
 // ✅ PhonePe routes
 router.post("/phonepe", protect, createPhonePeOrder);
