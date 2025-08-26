@@ -27,7 +27,7 @@ const MyOrders = () => {
 
   if (loading)
     return (
-      <div className="p-6 text-center text-gray-600 font-semibold">Loading orders...</div>
+      <div className="p-6 text-center text-gray-600 font-semibold">You have no orders yet.</div>
     );
   if (error)
     return (
