@@ -20,7 +20,7 @@ const Footer = () => {
           Other Policies
           </Link>
         </div>
-        <p>&copy; {new Date().getFullYear()} AMT. All rights reserved.  (ASHOK PAPER PRODUCTS)</p>
+        <p>&copy; {new Date().getFullYear()} AMT. All rights reserved.</p>
       </div>
     </footer>
   );

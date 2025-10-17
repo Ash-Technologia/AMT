@@ -1,33 +1,32 @@
 import React, { useState, useEffect } from "react";
 import AdminLayout from "../../layouts/AdminLayout";
 import styles from "../../styles/AdminStyles.module.css";
-import api from "../../api";
+import api from "../../api"; // ✅ axios instance with token interceptor
 
 const AdminAddProduct = () => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     price: "",
-    category: "",
     countInStock: "",
     slug: "",
+    category: "",
     image: null,
     images: [],
     youtubeLink: "",
-    // ✅ NEW SHIPPING FIELDS
-    shippingType: "free",     // "free" | "cod"
-    shippingCharge: 0,        // number
+    shippingType: "free", // "free" | "cod"
   });
 
   const [categories, setCategories] = useState([]);
 
+  // ✅ Fetch categories from backend
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const { data } = await api.get("/api/categories");
         setCategories(data);
-      } catch (error) {
-        console.error("Error loading categories:", error);
+      } catch (err) {
+        console.error("Error fetching categories:", err);
       }
     };
     fetchCategories();
@@ -35,24 +34,23 @@ const AdminAddProduct = () => {
 
   const handleChange = (e) => {
     const { name, files, value } = e.target;
+
     if (name === "image") {
       setFormData((prev) => ({ ...prev, image: files[0] }));
     } else if (name === "images") {
-      setFormData((prev) => ({ ...prev, images: files ? Array.from(files) : [] }));
+      setFormData((prev) => ({
+        ...prev,
+        images: files ? Array.from(files) : [],
+      }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
-    // (kept as-is from your original)
-    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      if (!formData.category) {
-        alert("Please select a category.");
-        return;
-      }
       if (!formData.image) {
         alert("Please upload a main image.");
         return;
@@ -62,41 +60,38 @@ const AdminAddProduct = () => {
       data.append("name", formData.name);
       data.append("description", formData.description);
       data.append("price", formData.price);
-      data.append("category", formData.category);
       data.append("countInStock", formData.countInStock);
       data.append("slug", formData.slug);
+      data.append("category", formData.category); // ✅ category restored as dropdown
       data.append("youtubeLink", formData.youtubeLink || "");
-
-      // ✅ NEW shipping fields
       data.append("shippingType", formData.shippingType);
-      data.append("shippingCharge", formData.shippingType === "free" ? 0 : formData.shippingCharge || 0);
 
       data.append("image", formData.image);
       formData.images.forEach((file) => {
         data.append("images", file);
       });
 
-      await axios.post("/api/admin/products", data, {
+      await api.post("/api/admin/products", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      alert("Product added successfully!");
+      alert("✅ Product added successfully!");
+
       setFormData({
         name: "",
         description: "",
         price: "",
-        category: "",
         countInStock: "",
         slug: "",
+        category: "",
         image: null,
         images: [],
         youtubeLink: "",
         shippingType: "free",
-        shippingCharge: 0,
       });
     } catch (error) {
       console.error("Add product error:", error);
-      alert(error.response?.data?.message || "Error adding product");
+      alert(error.response?.data?.message || "❌ Error adding product");
     }
   };
 
@@ -143,23 +138,6 @@ const AdminAddProduct = () => {
           </label>
 
           <label>
-            Category
-            <select
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-              required
-            >
-              <option value="">-- Select Category --</option>
-              {categories.map((cat) => (
-                <option key={cat._id} value={cat._id}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label>
             Count In Stock
             <input
               type="number"
@@ -181,6 +159,24 @@ const AdminAddProduct = () => {
               onChange={handleChange}
               placeholder="Enter product slug"
             />
+          </label>
+
+          {/* ✅ Category Dropdown */}
+          <label>
+            Category
+            <select
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              required
+            >
+              <option value="">-- Select Category --</option>
+              {categories.map((cat) => (
+                <option key={cat._id} value={cat._id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
           </label>
 
           <label>
@@ -205,8 +201,8 @@ const AdminAddProduct = () => {
             />
           </label>
 
-          <div>
-            <label>YouTube Link</label>
+          <label>
+            YouTube Link
             <input
               type="text"
               name="youtubeLink"
@@ -214,9 +210,9 @@ const AdminAddProduct = () => {
               onChange={handleChange}
               placeholder="Enter YouTube video URL"
             />
-          </div>
+          </label>
 
-          {/* ✅ NEW: Shipping controls */}
+          {/* ✅ Shipping */}
           <label>
             Shipping Type
             <select
@@ -225,23 +221,17 @@ const AdminAddProduct = () => {
               onChange={handleChange}
             >
               <option value="free">Free Shipping</option>
-              <option value="cod">Cash on Delivery (shipping charges)</option>
+              <option value="cod">
+                Cash on Delivery (charges paid at delivery)
+              </option>
             </select>
           </label>
 
-          <label>
-            Shipping Charge (₹)
-            <input
-              type="number"
-              name="shippingCharge"
-              value={formData.shippingType === "free" ? 0 : formData.shippingCharge}
-              onChange={handleChange}
-              min="0"
-              step="0.01"
-              placeholder="Enter shipping charge"
-              disabled={formData.shippingType === "free"}
-            />
-          </label>
+          {formData.shippingType === "cod" && (
+            <p style={{ color: "red", fontSize: "14px", margin: "5px 0" }}>
+              Delivery charges approx ₹3000, to be paid at time of delivery.
+            </p>
+          )}
 
           <button className={styles.btnPrimary} type="submit">
             Add Product

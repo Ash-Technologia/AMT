@@ -1,3 +1,4 @@
+// frontend/src/pages/CheckoutPage.jsx
 import React, { useState } from "react";
 import api from "../api";
 import { useSelector, useDispatch } from "react-redux";
@@ -21,10 +22,7 @@ const CheckoutPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const itemsPrice = cartItems.reduce(
-    (acc, item) => acc + item.price * item.qty,
-    0
-  );
+  const itemsPrice = cartItems.reduce((acc, item) => acc + item.price * item.qty, 0);
 
   const shippingPrice = cartItems.reduce((acc, item) => {
     if (item.shippingType === "cod") {
@@ -53,12 +51,25 @@ const CheckoutPage = () => {
     setShippingData({ ...shippingData, [e.target.name]: e.target.value });
   };
 
-  const handlePhonePe = async () => {
+  // Helper to dynamically load Razorpay SDK
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      if (window.Razorpay) return resolve(true);
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  const handleRazorpayPayment = async () => {
     if (!validateShipping()) return;
     setLoading(true);
     setError("");
 
     try {
+      // 1) Create order on server (DB order + Razorpay order)
       const orderPayload = {
         orderItems: cartItems.map((item) => ({
           product: item._id,
@@ -68,28 +79,91 @@ const CheckoutPage = () => {
           image: item.image,
         })),
         shippingAddress: shippingData,
-        paymentMethod: "phonepe",
-        itemsPrice,
-        shippingPrice,
-        totalPrice,
+        paymentMethod: "Razorpay",
       };
 
-      const res = await api.post("/api/orders/phonepe", orderPayload);
-      const { paymentUrl, orderId } = res.data;
+      console.log("Creating Razorpay order payload", orderPayload);
 
-      if (!paymentUrl) {
-        setError("Failed to initiate PhonePe payment.");
+      const res = await api.post("/api/orders/razorpay/create", orderPayload);
+      console.log("createRazorpayOrder response:", res.data);
+
+      const { razorpayOrder, orderId, razorpayKeyId } = res.data;
+
+      if (!razorpayOrder || !razorpayKeyId) {
+        setError(res.data?.message || "Failed to initiate Razorpay payment.");
         setLoading(false);
         return;
       }
 
-      // clear cart on redirect
-      dispatch(clearCart());
+      // 2) Load Razorpay SDK
+      const ok = await loadRazorpayScript();
+      if (!ok) {
+        setError("Failed to load Razorpay SDK. Check your network.");
+        setLoading(false);
+        return;
+      }
 
-      // Redirect to PhonePe
-      window.location.href = paymentUrl;
+      // 3) Open Razorpay Checkout
+      const options = {
+        key: razorpayKeyId,
+        amount: razorpayOrder.amount, // in paise
+        currency: razorpayOrder.currency || "INR",
+        name: "Your Shop Name",
+        description: `Order #${orderId}`,
+        order_id: razorpayOrder.id,
+        prefill: {
+          name: shippingData.fullName,
+          contact: shippingData.phone,
+        },
+        handler: async function (response) {
+          // response: { razorpay_payment_id, razorpay_order_id, razorpay_signature }
+          try {
+            setLoading(true);
+            const verifyRes = await api.post("/api/orders/razorpay/verify", {
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpayOrderId: response.razorpay_order_id,
+              razorpaySignature: response.razorpay_signature,
+              merchantOrderId: orderId, // our DB order id
+            });
+
+            console.log("verify response:", verifyRes.data);
+
+            if (verifyRes.data && verifyRes.data.success) {
+              // Payment confirmed. Clear cart and navigate to order page.
+              dispatch(clearCart());
+              navigate(`/order/${orderId}`);
+            } else {
+              setError("Payment verification failed on server.");
+            }
+          } catch (err) {
+            console.error("Payment verify error:", err?.response?.data || err?.message || err);
+            setError(err?.response?.data?.message || "Payment verification failed.");
+          } finally {
+            setLoading(false);
+          }
+        },
+        modal: {
+          ondismiss: function () {
+            // User closed checkout; do not clear cart
+            console.log("Razorpay modal closed by user");
+          },
+        },
+        theme: {
+          color: "#F37254",
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+
+      rzp.on("payment.failed", function (paymentFailureResponse) {
+        console.error("Razorpay payment failed:", paymentFailureResponse);
+        setError("Payment failed. Please try again or use another method.");
+      });
+
+      rzp.open();
     } catch (err) {
-      setError(err?.response?.data?.message || "Failed to create PhonePe order");
+      console.error("❌ Razorpay Checkout error:", err?.response?.data || err?.message || err);
+      setError(err?.response?.data?.message || "Failed to create Razorpay order");
     } finally {
       setLoading(false);
     }
@@ -161,11 +235,11 @@ const CheckoutPage = () => {
       </div>
 
       <button
-        onClick={handlePhonePe}
+        onClick={handleRazorpayPayment}
         disabled={loading}
         className={`pay-btn ${loading ? "disabled" : ""}`}
       >
-        {loading ? "Processing Payment..." : "Pay with PhonePe"}
+        {loading ? "Processing Payment..." : "Pay with Razorpay"}
       </button>
     </div>
   );
