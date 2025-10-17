@@ -1,6 +1,4 @@
-// =========================
-// BACKEND: backend/models/Order.js
-// =========================
+// backend/models/Order.js
 import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema({
@@ -22,7 +20,7 @@ const orderSchema = new mongoose.Schema({
     country: String,
     phone: String,
   },
-  paymentMethod: { type: String, default: "razorpay" },
+  paymentMethod: { type: String, default: "Razorpay" },
   itemsPrice: Number,
   shippingPrice: Number,
   taxPrice: Number,
@@ -32,9 +30,17 @@ const orderSchema = new mongoose.Schema({
   isDelivered: { type: Boolean, default: false },
   deliveredAt: Date,
   status: { type: String, default: "Processing" },
-  shippingType: { type: String, default: "free" }, 
+  shippingType: { type: String, default: "free" },
   shippingCharge: { type: Number, default: 0 },
-  stockUpdated: { type: Boolean, default: false },  // flag to prevent multiple stock decrements
+  stockUpdated: { type: Boolean, default: false },
+  paymentResult: {
+    // generic container for payment provider info
+    provider: { type: String },
+    paymentId: { type: String },
+    orderId: { type: String },
+    signature: { type: String },
+    raw: { type: mongoose.Schema.Types.Mixed },
+  },
 }, { timestamps: true });
 
 const Order = mongoose.models.Order || mongoose.model("Order", orderSchema);
